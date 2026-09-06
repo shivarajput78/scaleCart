@@ -3,9 +3,30 @@ import Link from "next/link";
 import AddToCartButton from "@/components/AddToCartButton";
 
 
+// async function getProduct(id) {
+//   const response = await fetch(
+//     `${process.env.NEXT_PUBLIC_API_URL}/products/${id}`,
+//     {
+//       cache: "no-store",
+//     }
+//   );
+
+//   if (!response.ok) {
+//     return null;
+//   }
+
+//   return response.json();
+// }
+
+
 async function getProduct(id) {
+  const API_URL =
+    process.env.NODE_ENV === "production"
+      ? "http://server:5000/api"
+      : process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000/api";
+
   const response = await fetch(
-    `${process.env.NEXT_PUBLIC_API_URL}/products/${id}`,
+    `${API_URL}/products/${id}`,
     {
       cache: "no-store",
     }

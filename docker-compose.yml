@@ -1,0 +1,89 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: scalecart-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: scalecart
+      POSTGRES_USER: scalecart
+      POSTGRES_PASSWORD: scalecart_dev_password
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./database/init/schema.sql:/docker-entrypoint-initdb.d/01-schema.sql:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U scalecart -d scalecart"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  redis:
+    image: redis:7-alpine
+    container_name: scalecart-redis
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  server:
+    build:
+      context: ./server
+      dockerfile: Dockerfile
+    container_name: scalecart-server
+    restart: unless-stopped
+    environment:
+      NODE_ENV: production
+      PORT: 5000
+
+      DB_HOST: postgres
+      DB_PORT: 5432
+      DB_NAME: scalecart
+      DB_USER: scalecart
+      DB_PASSWORD: scalecart_dev_password
+
+      REDIS_URL: redis://redis:6379
+
+      CLIENT_URL: http://localhost:3000
+
+      JWT_SECRET: ${JWT_SECRET}
+      RAZORPAY_KEY_ID: ${RAZORPAY_KEY_ID}
+      RAZORPAY_KEY_SECRET: ${RAZORPAY_KEY_SECRET}
+      RAZORPAY_WEBHOOK_SECRET: ${RAZORPAY_WEBHOOK_SECRET}
+
+    ports:
+      - "5000:5000"
+
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+
+  client:
+    build:
+      context: ./client
+      dockerfile: Dockerfile
+      args:
+        NEXT_PUBLIC_API_URL: http://localhost:5000/api
+        NEXT_PUBLIC_SOCKET_URL: http://localhost:5000
+    container_name: scalecart-client
+    restart: unless-stopped
+    environment:
+      NODE_ENV: production
+      NEXT_PUBLIC_API_URL: http://localhost:5000/api
+      NEXT_PUBLIC_SOCKET_URL: http://localhost:5000
+    ports:
+      - "3000:3000"
+    depends_on:
+      - server
+
+volumes:
+  postgres_data:
+  redis_data:

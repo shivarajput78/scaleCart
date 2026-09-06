@@ -249,7 +249,7 @@ const getProducts = async (req, res) => {
         c.name AS category_name,
         c.slug AS category_slug,
 
-        i.quantity AS stock
+        i.quantity AS stock_quantity
 
       FROM products p
 

@@ -52,8 +52,9 @@ import {
 } from "./auth";
 
 const API_URL =
-  process.env.NEXT_PUBLIC_API_URL ||
-  "http://localhost:5000";
+  typeof window === "undefined"
+    ? "http://server:5000/api"
+    : process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000/api";
 
 let refreshPromise = null;
 
