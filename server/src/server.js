@@ -42,7 +42,7 @@ const { Server } = require("socket.io");
 
 const app = express();
 
-
+app.set('trust proxy', 1);
 
 const httpServer = http.createServer(app);
 
