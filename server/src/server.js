@@ -119,12 +119,23 @@ app.get("/api/health", async (req, res) => {
       message: "ScaleCart API is running",
       databaseTime: result.rows[0].now,
     });
+  // } catch (error) {
+  //   res.status(500).json({
+  //     success: false,
+  //     message: "Database connection failed",
+  //   });
+  // }
+
+
   } catch (error) {
-    res.status(500).json({
-      success: false,
-      message: "Database connection failed",
-    });
-  }
+  console.error("DATABASE HEALTH ERROR:", error);
+
+  res.status(500).json({
+    success: false,
+    message: "Database connection failed",
+    error: error.message,
+  });
+}
 });
 
 
