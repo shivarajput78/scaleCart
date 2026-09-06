@@ -123,4 +123,6 @@ export default function CheckoutSuccessPage() {
       <CheckoutSuccessContent />
     </Suspense>
   );
+
 }
+
