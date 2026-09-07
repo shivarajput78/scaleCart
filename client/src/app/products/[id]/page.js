@@ -20,10 +20,11 @@ import AddToCartButton from "@/components/AddToCartButton";
 
 
 async function getProduct(id) {
-  const API_URL =
-    process.env.NODE_ENV === "production"
-      ? "http://server:5000/api"
-      : process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000/api";
+  // const API_URL =
+  //   process.env.NODE_ENV === "production"
+  //     ? "http://server:5000/api"
+  //     : process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000/api";
+  const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000/api";
 
   const response = await fetch(
     `${API_URL}/products/${id}`,
