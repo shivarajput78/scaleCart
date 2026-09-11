@@ -24,16 +24,17 @@ CREATE TABLE IF NOT EXISTS categories (
 );
 
 CREATE TABLE IF NOT EXISTS products (
-    id BIGSERIAL PRIMARY KEY,
-    category_id BIGINT NOT NULL REFERENCES categories(id) ON DELETE RESTRICT,
-    name VARCHAR(200) NOT NULL,
-    slug VARCHAR(220) NOT NULL,
-    description TEXT,
-    price NUMERIC(12,2) NOT NULL CHECK (price >= 0),
-    status VARCHAR(20) NOT NULL DEFAULT 'active',
-    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    CONSTRAINT products_slug_unique UNIQUE (slug)
+  id BIGSERIAL PRIMARY KEY,
+  category_id BIGINT NOT NULL REFERENCES categories(id) ON DELETE RESTRICT,
+  name VARCHAR(200) NOT NULL,
+  slug VARCHAR(220) NOT NULL,
+  description TEXT,
+  price NUMERIC(12,2) NOT NULL CHECK (price >= 0),
+  image_url TEXT,
+  status VARCHAR(20) NOT NULL DEFAULT 'active',
+  created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  CONSTRAINT products_slug_unique UNIQUE (slug)
 );
 
 CREATE TABLE IF NOT EXISTS inventory (
