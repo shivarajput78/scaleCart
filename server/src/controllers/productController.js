@@ -16,6 +16,7 @@ const createProduct = async (req, res) => {
       description,
       price,
       quantity,
+      imageUrl,
     } = req.body;
 
     if (
@@ -58,8 +59,8 @@ const createProduct = async (req, res) => {
     // Create product
     const productResult = await client.query(
       `INSERT INTO products
-       (category_id, name, slug, description, price)
-       VALUES ($1, $2, $3, $4, $5)
+       (category_id, name, slug, description, price, image_url)
+       VALUES ($1, $2, $3, $4, $5, $6)
        RETURNING *`,
       [
         categoryId,
@@ -67,6 +68,7 @@ const createProduct = async (req, res) => {
         slug.trim().toLowerCase(),
         description || null,
         price,
+        imageUrl?.trim() || null,
       ]
     );
 
@@ -186,7 +188,7 @@ const getProducts = async (req, res) => {
       values.push(category);
 
       conditions.push(
-        `c.slug = $${values.length}`
+       `c.slug = $${values.length}`
       );
     }
 
@@ -195,7 +197,7 @@ const getProducts = async (req, res) => {
       values.push(Number(minPrice));
 
       conditions.push(
-        `p.price >= $${values.length}`
+       `p.price >= $${values.length}`
       );
     }
 
@@ -204,7 +206,7 @@ const getProducts = async (req, res) => {
       values.push(Number(maxPrice));
 
       conditions.push(
-        `p.price <= $${values.length}`
+       `p.price <= $${values.length}`
       );
     }
 
@@ -242,6 +244,7 @@ const getProducts = async (req, res) => {
         p.slug,
         p.description,
         p.price,
+        p.image_url,
         p.status,
         p.created_at,
 
@@ -421,6 +424,7 @@ const getProductById = async (req, res) => {
         p.slug,
         p.description,
         p.price,
+        p.image_url,
         p.status,
         p.created_at,
         p.updated_at,
@@ -507,6 +511,7 @@ const updateProduct = async (req, res) => {
       price,
       categoryId,
       status,
+      imageUrl,
     } = req.body;
 
     if (!/^\d+$/.test(id)) {
@@ -522,7 +527,8 @@ const updateProduct = async (req, res) => {
       description === undefined &&
       price === undefined &&
       categoryId === undefined &&
-      status === undefined
+      status === undefined &&
+      imageUrl === undefined
     ) {
       return res.status(400).json({
         success: false,
@@ -603,8 +609,9 @@ const updateProduct = async (req, res) => {
         price = COALESCE($4, price),
         category_id = COALESCE($5, category_id),
         status = COALESCE($6, status),
+        image_url = COALESCE($7, image_url),
         updated_at = CURRENT_TIMESTAMP
-      WHERE id = $7
+      WHERE id = $8
       RETURNING *
       `,
       [
@@ -614,6 +621,7 @@ const updateProduct = async (req, res) => {
         price,
         categoryId,
         status,
+        imageUrl?.trim() || null,
         id,
       ]
     );
