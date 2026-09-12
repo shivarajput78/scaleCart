@@ -123,7 +123,7 @@ const getProducts = async (req, res) => {
   try {
     let {
       page = 1,
-      limit = 10,
+      limit = 100,
       search = "",
       category,
       minPrice,
@@ -133,7 +133,7 @@ const getProducts = async (req, res) => {
 
     // Normalize pagination
     page = Math.max(Number(page), 1);
-    limit = Math.min(Math.max(Number(limit), 1), 50);
+    limit = Math.min(Math.max(Number(limit), 1), 200);
 
     const offset = (page - 1) * limit;
 

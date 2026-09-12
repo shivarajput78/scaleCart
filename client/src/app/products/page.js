@@ -753,7 +753,7 @@ export default function ProductsPage() {
         }
 
         params.set("page", page);
-        params.set("limit", 10);
+        params.set("limit", 100);
 
         const data = await apiRequest(
           `/products?${params.toString()}`
