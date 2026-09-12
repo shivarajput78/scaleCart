@@ -947,7 +947,7 @@ export default function ProductsPage() {
 
       {/* Loading */}
       {loading && (
-        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+        <div className="grid grid-cols-2 gap-4 sm:grid-cols-2 lg:grid-cols-4">
           {Array.from({ length: 8 }).map(
             (_, index) => (
               <div
@@ -997,7 +997,7 @@ export default function ProductsPage() {
       {!loading &&
         !error &&
         products.length > 0 && (
-          <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+          <div className="grid grid-cols-2 gap-4 sm:grid-cols-2 lg:grid-cols-4">
             {products.map((product) => {
               const imageUrl =
                 product.image_url ||
